@@ -60,3 +60,32 @@ class PriorityQueue(object):
             return item
         else:
             return None
+            
+# implementing the graph class
+class Graph(object):
+    def __init__(self):
+        self.adj_list = {}
+ 
+    def __str__(self):
+        return str(self.adj_list)
+    
+    def add_vertex(self, value):
+        if(value not in self.adj_list.keys()):
+            self.adj_list[value] = {}
+        
+    def add_edge(self, vertex_1, vertex_2, dist):
+        keys = self.adj_list.keys()
+        if(vertex_1 in keys and vertex_2 in keys):
+            self.adj_list[vertex_1][vertex_2] = dist
+            self.adj_list[vertex_2][vertex_1] = dist
+            
+    def get_neighbors(self, vertex):
+        return self.adj_list[vertex]
+
+# constructing the graph with the previously found cities and distances
+graph = Graph()
+distinct_cities = df['City_1'].unique()
+for city in distinct_cities:
+    graph.add_vertex(city)
+    
+df.apply(lambda x: graph.add_edge(x.City_1, x.City_2, x.distance), axis=1)
