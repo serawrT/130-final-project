@@ -122,3 +122,52 @@ def dijkstra(graph, start, end):
                     visiting_queue.insert((place, curr_dist + dist))
         visited.append(current_place)
     return dijkstra_table
+
+
+for i, city in enumerate(distinct_cities):
+    print(f'{i} : {city}')
+
+# starting_city = 'San Jose' # uncomment this whole line for using san jose as startingpoint only
+# comment this for san jose starting point only
+starting_city = input("Input the starting city's id or its name: ")
+destination_city = input("Input the destination city's id or its name: ")
+print('Choose a starting and the destination city from the above list:')
+
+highway_consumption = float(
+    input("Your average fuel consumtpion (miles/gallon)) on highway: "))
+city_consumption = float(
+    input("Your average fuel consumtpion (miles/gallon) in the city: "))
+fuel_price = float(input("Your average fuel  $/Gallon: "))
+
+if (starting_city.isnumeric()):  # comment this for san jose starting point only
+    # comment this for san jose starting point only
+    starting_city = distinct_cities[int(starting_city)]
+
+if (destination_city.isnumeric()):
+    destination_city = distinct_cities[int(destination_city)]
+
+shortest_path = dijkstra(graph, starting_city, destination_city)
+
+# finding the order of cities
+current_city = destination_city
+list_of_cities = [destination_city]
+while (current_city != starting_city):
+    current_city = shortest_path[current_city][0]
+    list_of_cities.append(current_city)
+
+print(list_of_cities)
+total_distance_to_travel = shortest_path['San Diego'][1]
+print(f'Total distance to travel: {total_distance_to_travel} miles')
+
+# Calculating fuel consumption of the trip:
+# It depends on the number of cities that the traveller have passed through,
+# since typicaly there's more fuel spent in and around the cities due to
+# traffic and the driving infrastructure.
+# We will roughly estimate that each 5 mile area around the city is a high fuel consumption area
+# and rest is a highway.
+fuel_consumption = len(list_of_cities) * 5 * (1 / city_consumption) + (
+    total_distance_to_travel - (len(list_of_cities) * 5)) * (1 / highway_consumption)
+print(
+    f'The estimated fuel consumption of the given trip is: {fuel_consumption} gallons')
+print(
+    f'The estimated fuel cost of the given trip is: {fuel_consumption * fuel_price}$')
