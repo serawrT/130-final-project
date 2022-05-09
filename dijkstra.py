@@ -32,3 +32,31 @@ df['distance'] = df.apply(lambda x: great_circle(x.Longitude_1, x.Latitude_1, x.
 # since roads usually do not go straight from one city to another for say 300 miles without intercepting any others
 df = df.sort_values(['City_1', 'distance'], ascending=[True, True]).groupby('City_1').head(5).reset_index(drop=True)
 
+# implementing the priority queue class
+class PriorityQueue(object):
+    def __init__(self):
+        self.queue = []
+ 
+    def __str__(self):
+        return ' '.join([str(i) for i in self.queue])
+ 
+    # for checking if the queue is empty
+    def isEmpty(self):
+        return len(self.queue) == 0
+ 
+    # for inserting an element in the queue
+    def insert(self, data):
+        self.queue.append(data)
+ 
+    # for popping an element based on Priority
+    def delete(self):
+        if(not self.isEmpty()):
+            min_dist_id = 0
+            for i in range(1, len(self.queue)):
+                if self.queue[i][1] < self.queue[min_dist_id][1]:
+                    min_dist_id = i
+            item = self.queue[min_dist_id]
+            self.queue.pop(min_dist_id)
+            return item
+        else:
+            return None
