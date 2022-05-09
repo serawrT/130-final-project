@@ -26,3 +26,9 @@ def great_circle(lon1, lat1, lon2, lat2):
     return 3959 * (
         acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon1 - lon2)))
 
+df['distance'] = df.apply(lambda x: great_circle(x.Longitude_1, x.Latitude_1, x.Longitude_2, x.Latitude_2), axis=1)
+
+# Here we make an assumption that the roads connect the city to it's 5 closest biggest neighbors
+# since roads usually do not go straight from one city to another for say 300 miles without intercepting any others
+df = df.sort_values(['City_1', 'distance'], ascending=[True, True]).groupby('City_1').head(5).reset_index(drop=True)
+
